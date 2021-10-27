@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         body: GridView.count(
           crossAxisCount:3,
-          children: List.generate(100,(index){
+          children: List.generate(3,(index){
             return Center(
               child: Image.asset('images/andy1.jpg'),
             );
