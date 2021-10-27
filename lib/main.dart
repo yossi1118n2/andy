@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '3目並べ',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -22,36 +22,80 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Grid List'),
-        ),
-        body: GridView.count(
-          crossAxisCount:3,
-          children: List.generate(3,(index){
-            return Center(
-              child: Image.asset('images/andy1.jpg'),
-            );
-          }),
-        ),
+      home: Container(
+        child: Column(
+          children: <Widget>[
+            Column(
+              children:<Widget>[
+                Text(
+                    'andyの手番です'
+                ),
+              ]
 
+          ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(color: Colors.blue, width: 200,height: 200),
+                Container(color: Colors.red, width: 200, height: 200),
+                Container(color: Colors.green, width: 200, height: 200),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(color: Colors.orange, width: 200, height: 200),
+                Container(color: Colors.pink, width: 200, height: 200),
+                Container(color: Colors.amber, width: 200, height: 200),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(color: Colors.purple, width: 200, height: 200),
+                Container(color: Colors.greenAccent, width: 200, height: 200),
+                Container(color: Colors.deepPurpleAccent, width: 200, height: 200),
+              ],
+            ),
+            Center(
+              child:ResetButton(),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
+
+class ResetButton extends StatefulWidget{
+  @override
+  _ResetButtonState createState() => _ResetButtonState();
+}
+
+class _ResetButtonState extends State<ResetButton>{
+
+  Widget build(BuildContext context){
+    return Container(
+      child: TextButton(
+        onPressed: (){},
+        child: Text(
+            'リセット',
+            style: TextStyle(fontSize: 50, color: Colors.black),
+        ),
+        style: TextButton.styleFrom(
+          primary: Colors.black,
+        ),
+      ),
+    );
+  }
+}
+
+
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
 
   final String title;
 
