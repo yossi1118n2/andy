@@ -54,30 +54,38 @@ class _PageState extends State<Page>{
   //固定じゃなくて画面サイズに合わせて表示みたいなようにしたいなぁー
   double block_size = 200;
 
+  MaterialColor COLOR1 = Colors.red;
+  MaterialColor COLOR2 = Colors.yellow;
+
+  //パネルの色管理
+  List<MaterialColor> def = [Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey];
+
+
+
   //0:まだ埋まっていない, 1: 先手が埋めた, 2: 後手が埋めた
   List<int> state_array = [0,0,0,0,0,0,0,0,0];
 
   int turn = 1;
-  //6が初期状態
-  int action = 6;
+  //0が初期状態
+  int action = 0;
 
-  int ALREADY = 0;
-  int FIRST_MOVE = 1;
-  int SECOND_MOVE = 2;
-  int FIRST_MOVE_WIN = 3;
-  int SECOND_MOVE_WIN = 4;
-  int DRAW = 5;
+  static const int ALREADY = 0;
+  static const int FIRST_MOVE = 1;
+  static const int SECOND_MOVE = 2;
+  static const int FIRST_MOVE_WIN = 3;
+  static const int SECOND_MOVE_WIN = 4;
+  static const int DRAW = 5;
 
   //タッチパネルナンバー
-  int PANEL0 = 0;
-  int PANEL1 = 1;
-  int PANEL2 = 2;
-  int PANEL3 = 3;
-  int PANEL4 = 4;
-  int PANEL5 = 5;
-  int PANEL6 = 6;
-  int PANEL7 = 7;
-  int PANEL8 = 8;
+  static const int PANEL0 = 0;
+  static const int PANEL1 = 1;
+  static const int PANEL2 = 2;
+  static const int PANEL3 = 3;
+  static const int PANEL4 = 4;
+  static const int PANEL5 = 5;
+  static const int PANEL6 = 6;
+  static const int PANEL7 = 7;
+  static const int PANEL8 = 8;
 
 
 
@@ -168,7 +176,43 @@ class _PageState extends State<Page>{
       }
 
     }
+    print("return_num");
+    print(return_num);
+    print("array");
+    for(int i=0; i<9;i++){
+      print(state_array[i]);
+    }
     return return_num;
+  }
+
+  void change_panel_color(int panel){
+    switch(action){
+      case ALREADY:
+        break;
+      case FIRST_MOVE:
+        def[panel] = COLOR1;
+        break;
+      case SECOND_MOVE:
+        def[panel] = COLOR2;
+        break;
+      case FIRST_MOVE_WIN:
+        def[panel] = COLOR1;
+        print("先手の勝利");
+        //ここに書く
+        break;
+      case SECOND_MOVE_WIN:
+        def[panel] = COLOR2;
+        print("後手の勝利");
+        //ここに書く
+        break;
+      case DRAW:
+        def[panel] = COLOR1;
+        print("引き分け");
+        //ここに書く
+        break;
+      default:
+        break;
+    }
   }
 
 
@@ -178,9 +222,6 @@ class _PageState extends State<Page>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('3目並べ'),
-      ),
       body:Container(
         child: Column(
           children: <Widget>[
@@ -209,79 +250,130 @@ class _PageState extends State<Page>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
                   onTap: (){
-                    action = touched(PANEL0);
+                    setState(() {
+                      action = touched(PANEL0);
+                      print("touched");
+                      change_panel_color(PANEL0);
+                    });
                   },
-                  child: ((){
-                    if(action == 6){
-                      Container( width: block_size,height: block_size,decoration: BoxDecoration(
-                        border: const Border(
-                          left: const BorderSide(
-                            color: Colors.black,
-                            width: 3,
-                          ),
-                          top: const BorderSide(
-                            color: Colors.black,
-                            width: 3,
-                          ),
-                          right: const BorderSide(
-                            color: Colors.black,
-                            width: 3,
-                          ),
-                          bottom: const BorderSide(
-                            color: Colors.black,
-                            width: 3,
-                          ),
-                        ),
-                      ),
-                      );
-                    }
-                    else if(action == 0){
-                      Container(color: Colors.black12, width: block_size , height: block_size);
-                    }
-                    else if(action == 1){
-                      //後で画像に差し替え
-                      Container(color: Colors.yellowAccent, width: block_size , height: block_size);
-                    }else if(action == 2){
-                      //後で画像に差し替え
-                      Container(color: Colors.redAccent, width: block_size , height: block_size);
-                    }else if(action == 3){
-                      //ポップアップを表示
-                      Container(color: Colors.black12, width: block_size , height: block_size);
-                    }else if(action == 4){
-                      //ポップアップを表示
-                      Container(color: Colors.black12, width: block_size , height: block_size);
-                    }else if(action == 5){
-                      //DRAWのポップアップを表示
-                      Container(color: Colors.black12, width: block_size , height: block_size);
-                    }else{
-                      print("ミスってる");
-                      Container(color: Colors.black12, width: block_size , height: block_size);
-                    }
-                  })(),
+                  child:Container(color: def[PANEL0], width: block_size , height: block_size),
                 ),
-                Container(color: Colors.red, width: block_size , height: block_size),
-                Container(color: Colors.green, width: 200, height: 200),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL1);
+                      print("touched");
+                      change_panel_color(PANEL1);
+                    });
+                  },
+                  child:Container(color: def[PANEL1], width: block_size , height: block_size),
+                ),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL2);
+                      print("touched");
+                      change_panel_color(PANEL2);
+                    });
+                  },
+                  child:Container(color: def[PANEL2], width: block_size , height: block_size),
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(color: Colors.orange, width: 200, height: 200),
-                Container(color: Colors.pink, width: 200, height: 200),
-                Container(color: Colors.amber, width: 200, height: 200),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL3);
+                      print("touched");
+                      change_panel_color(PANEL3);
+                    });
+                  },
+                  child:Container(color: def[PANEL3], width: block_size , height: block_size),
+                ),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL4);
+                      print("touched");
+                      change_panel_color(PANEL4);
+                    });
+                  },
+                  child:Container(color: def[PANEL4], width: block_size , height: block_size),
+                ),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL5);
+                      print("touched");
+                      change_panel_color(PANEL5);
+                    });
+                  },
+                  child:Container(color: def[PANEL5], width: block_size , height: block_size),
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(color: Colors.purple, width: 200, height: 200),
-                Container(color: Colors.greenAccent, width: 200, height: 200),
-                Container(color: Colors.deepPurpleAccent, width: 200, height: 200),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL6);
+                      print("touched");
+                      change_panel_color(PANEL6);
+                    });
+                  },
+                  child:Container(color: def[PANEL6], width: block_size , height: block_size),
+                ),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL7);
+                      print("touched");
+                      change_panel_color(PANEL7);
+                    });
+                  },
+                  child:Container(color: def[PANEL7], width: block_size , height: block_size),
+                ),
+                GestureDetector(
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: (){
+                    setState(() {
+                      action = touched(PANEL8);
+                      print("touched");
+                      change_panel_color(PANEL8);
+                    });
+                  },
+                  child:Container(color: def[PANEL8], width: block_size , height: block_size),
+                ),
               ],
             ),
             Center(
-              child:ResetButton(),
+              child:GestureDetector(
+                // behavior: HitTestBehavior.deferToChild,
+                onTap: (){
+                  setState(() {
+                    for(int i=0;i<9;i++){
+                      def[i] = Colors.grey;
+                      state_array[i] = 0;
+                    }
+                    turn = 1;
+                  });
+                },
+                child:Container(color: Colors.white,  width: block_size , height: block_size /2 , child: Text('リセット',style: TextStyle(fontSize: 32),),alignment:Alignment.center,),
+              ),
             ),
           ],
         ),
@@ -304,7 +396,9 @@ class _ResetButtonState extends State<ResetButton>{
   Widget build(BuildContext context){
     return Container(
       child: TextButton(
-        onPressed: (){},
+        onPressed: (){
+
+        },
         child: Text(
             'リセット',
             style: TextStyle(fontSize: 50, color: Colors.black),
