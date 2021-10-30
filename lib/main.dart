@@ -87,6 +87,22 @@ class _PageState extends State<Page>{
   static const int PANEL7 = 7;
   static const int PANEL8 = 8;
 
+  //画像
+  List<String> player1win_image = [
+    'images/andy1.jpg',
+    'images/andy2.jpg',
+  ];
+
+  List<String> player2win_image = [
+    'images/nishio1.jpg',
+    'images/nishio2.jpg',
+  ];
+
+  List<String> draw_image =[
+    'images/draw1.jpg',
+    'images/draw2.jpg',
+  ];
+
 
 
 
@@ -198,21 +214,106 @@ class _PageState extends State<Page>{
       case FIRST_MOVE_WIN:
         def[panel] = COLOR1;
         print("先手の勝利");
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text("先手の勝利"),
+              children: [
+                Container(
+                  width: block_size * 2,
+                  height: block_size * 2,
+                  child: Image.asset(
+                    'images/andy2.jpg',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SimpleDialogOption(
+                  onPressed: (){
+                    reset();
+                    Navigator.pop(context);
+                  },
+                  child: Text("NEXT GAME"),
+                ),
+              ],
+            );
+          },
+        );
         //ここに書く
         break;
       case SECOND_MOVE_WIN:
         def[panel] = COLOR2;
         print("後手の勝利");
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text("後手の勝利"),
+              children: [
+                Container(
+                  width: block_size * 2,
+                  height: block_size * 2,
+                  child: Image.asset(
+                    'images/nishio1.jpg',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SimpleDialogOption(
+                  onPressed: (){
+                    reset();
+                    Navigator.pop(context);
+                  },
+                  child: Text("NEXT GAME"),
+                ),
+              ],
+            );
+          },
+        );
         //ここに書く
         break;
       case DRAW:
         def[panel] = COLOR1;
         print("引き分け");
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text("引き分け"),
+              children: [
+                Container(
+                  width: block_size * 2,
+                  height: block_size * 2,
+                  child: Image.asset(
+                    'images/andy1.jpg',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SimpleDialogOption(
+                  onPressed: (){
+                    reset();
+                    Navigator.pop(context);
+                  },
+                  child: Text("NEXT GAME"),
+                ),
+              ],
+            );
+          },
+        );
         //ここに書く
         break;
       default:
         break;
     }
+  }
+
+  void reset(){
+    setState(() {
+      for(int i=0;i<9;i++){
+        def[i] = Colors.grey;
+        state_array[i] = 0;
+      }
+      turn = 1;
+    });
   }
 
 
@@ -364,13 +465,7 @@ class _PageState extends State<Page>{
               child:GestureDetector(
                 // behavior: HitTestBehavior.deferToChild,
                 onTap: (){
-                  setState(() {
-                    for(int i=0;i<9;i++){
-                      def[i] = Colors.grey;
-                      state_array[i] = 0;
-                    }
-                    turn = 1;
-                  });
+                  reset();
                 },
                 child:Container(color: Colors.white,  width: block_size , height: block_size /2 , child: Text('リセット',style: TextStyle(fontSize: 32),),alignment:Alignment.center,),
               ),
