@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -52,10 +54,11 @@ class Page extends StatefulWidget{
 
 class _PageState extends State<Page>{
   //固定じゃなくて画面サイズに合わせて表示みたいなようにしたいなぁー
-  double block_size = 200;
+  double block_size = 80;
+  double edge_size = 8;
 
   MaterialColor COLOR1 = Colors.red;
-  MaterialColor COLOR2 = Colors.yellow;
+  MaterialColor COLOR2 = Colors.blue;
 
   //パネルの色管理
   List<MaterialColor> def = [Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey,Colors.grey];
@@ -87,10 +90,14 @@ class _PageState extends State<Page>{
   static const int PANEL7 = 7;
   static const int PANEL8 = 8;
 
+  //画像をランダムに選ぶ際に利用
+  Random random= Random();
+
+
   //画像
   List<String> player1win_image = [
-    'images/andy1.jpg',
     'images/andy2.jpg',
+    'images/andy3.jpg'
   ];
 
   List<String> player2win_image = [
@@ -214,6 +221,8 @@ class _PageState extends State<Page>{
       case FIRST_MOVE_WIN:
         def[panel] = COLOR1;
         print("先手の勝利");
+        int randomWin1Index = random.nextInt(player1win_image.length);
+        String randomWin1 = player1win_image[randomWin1Index];
         showDialog(
           context: context,
           builder: (context) {
@@ -221,10 +230,10 @@ class _PageState extends State<Page>{
               title: Text("先手の勝利"),
               children: [
                 Container(
-                  width: block_size * 2,
-                  height: block_size * 2,
+                  width: block_size * 4,
+                  height: block_size * 4,
                   child: Image.asset(
-                    'images/andy2.jpg',
+                    randomWin1,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -244,6 +253,8 @@ class _PageState extends State<Page>{
       case SECOND_MOVE_WIN:
         def[panel] = COLOR2;
         print("後手の勝利");
+        int randomWin2Index = random.nextInt(player2win_image.length);
+        String randomWin2 = player2win_image[randomWin2Index];
         showDialog(
           context: context,
           builder: (context) {
@@ -251,10 +262,10 @@ class _PageState extends State<Page>{
               title: Text("後手の勝利"),
               children: [
                 Container(
-                  width: block_size * 2,
-                  height: block_size * 2,
+                  width: block_size * 4,
+                  height: block_size * 4,
                   child: Image.asset(
-                    'images/nishio1.jpg',
+                    randomWin2,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -274,6 +285,8 @@ class _PageState extends State<Page>{
       case DRAW:
         def[panel] = COLOR1;
         print("引き分け");
+        int randomDrawIndex = random.nextInt(draw_image.length);
+        String randomDraw = draw_image[randomDrawIndex];
         showDialog(
           context: context,
           builder: (context) {
@@ -281,10 +294,10 @@ class _PageState extends State<Page>{
               title: Text("引き分け"),
               children: [
                 Container(
-                  width: block_size * 2,
-                  height: block_size * 2,
+                  width: block_size * 4,
+                  height: block_size * 4,
                   child: Image.asset(
-                    'images/andy1.jpg',
+                    randomDraw,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -323,23 +336,36 @@ class _PageState extends State<Page>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('白熱!! 3目並べ'),
+      ),
       body:Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/background.jpg'),
+              fit: BoxFit.cover,
+            )),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Column(
                 children:<Widget>[
                   //即時関数(ちゃんと理解できていない。)
                   ((){
                     if(turn == 1){
-                      return Text(
-                          'andyの手番です',
-                          style: TextStyle(fontSize: 50, color: Colors.black),
-                    );
+                      return Container(color: Colors.white,  width: block_size * 3.5 , height: block_size ,
+                        child: Text('andyの手番です',
+                          style: TextStyle(
+                              fontSize:block_size / 3,
+                              color: COLOR1),),
+                        alignment:Alignment.center,);
                     }else{
-                       return Text(
-                          '西尾教授の手番です',
-                          style: TextStyle(fontSize: 50, color: Colors.black),
-                      );
+                       return Container(color: Colors.white,  width: block_size * 3.5 , height: block_size ,
+                         child: Text('教授の手番です',
+                           style: TextStyle(
+                               fontSize:block_size / 3,
+                               color: COLOR2),),
+                         alignment:Alignment.center,);
                     }
                   })(),
 
@@ -359,7 +385,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL0);
                     });
                   },
-                  child:Container(color: def[PANEL0], width: block_size , height: block_size),
+                  child: Padding(
+                          padding: EdgeInsets.all(edge_size),
+                          child:Container(color: def[PANEL0], width: block_size , height: block_size),
+                          ),
                 ),
                 GestureDetector(
                   // behavior: HitTestBehavior.deferToChild,
@@ -370,7 +399,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL1);
                     });
                   },
-                  child:Container(color: def[PANEL1], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL1], width: block_size , height: block_size),
+                  ),
                 ),
                 GestureDetector(
                   // behavior: HitTestBehavior.deferToChild,
@@ -381,7 +413,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL2);
                     });
                   },
-                  child:Container(color: def[PANEL2], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL2], width: block_size , height: block_size),
+                  ),
                 ),
               ],
             ),
@@ -397,7 +432,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL3);
                     });
                   },
-                  child:Container(color: def[PANEL3], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL3], width: block_size , height: block_size),
+                  ),
                 ),
                 GestureDetector(
                   // behavior: HitTestBehavior.deferToChild,
@@ -408,7 +446,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL4);
                     });
                   },
-                  child:Container(color: def[PANEL4], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL4], width: block_size , height: block_size),
+                  ),
                 ),
                 GestureDetector(
                   // behavior: HitTestBehavior.deferToChild,
@@ -419,7 +460,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL5);
                     });
                   },
-                  child:Container(color: def[PANEL5], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL5], width: block_size , height: block_size),
+                  ),
                 ),
               ],
             ),
@@ -435,7 +479,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL6);
                     });
                   },
-                  child:Container(color: def[PANEL6], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL6], width: block_size , height: block_size),
+                  ),
                 ),
                 GestureDetector(
                   // behavior: HitTestBehavior.deferToChild,
@@ -446,7 +493,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL7);
                     });
                   },
-                  child:Container(color: def[PANEL7], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL7], width: block_size , height: block_size),
+                  ),
                 ),
                 GestureDetector(
                   // behavior: HitTestBehavior.deferToChild,
@@ -457,7 +507,10 @@ class _PageState extends State<Page>{
                       change_panel_color(PANEL8);
                     });
                   },
-                  child:Container(color: def[PANEL8], width: block_size , height: block_size),
+                  child: Padding(
+                    padding: EdgeInsets.all(edge_size),
+                    child:Container(color: def[PANEL8], width: block_size , height: block_size),
+                  ),
                 ),
               ],
             ),
@@ -467,7 +520,7 @@ class _PageState extends State<Page>{
                 onTap: (){
                   reset();
                 },
-                child:Container(color: Colors.white,  width: block_size , height: block_size /2 , child: Text('リセット',style: TextStyle(fontSize: 32),),alignment:Alignment.center,),
+                child:Container(color: Colors.white,  width: block_size * 3 , height: block_size , child: Text('リセット',style: TextStyle(fontSize:block_size / 2, color: Colors.green),),alignment:Alignment.center,),
               ),
             ),
           ],
